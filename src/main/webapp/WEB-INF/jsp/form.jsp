@@ -28,6 +28,11 @@
 </head>
 <body>
 
+	<form action="/category/add" method="post" id="add_category" >
+	    <input type="text" name="categoryName" class="form-control" placeholder="새로운 카테고리">
+	    <button type="submit" class="form-control">추가</button>
+	</form>
+
 	<div id="toolbar">
 		<span id="back" class="icon-back" onclick="history.back();">돌아가기</span><br>
 		<span id="hinted" class="icon-pre disabled" title="Toggle Markdown Hints"></span>
@@ -47,6 +52,18 @@
 			style="height: 40px; width: 100%; font-size: 35px; 
 			border: none; border-right: 0px; border-top: 0px; boder-left: 0px; boder-bottom: 1px; outline-style: none; 
 			font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 800;">
+
+		<div class="form-group" style="height: 30px;">
+		    <label for="category" class="col-sm-2 control-label">Category</label>
+		    <div class="col-sm-10">
+		    	<select name="categoryId">
+		    		<c:forEach var="category" items="${categoryMap}">
+						<option value="${category.id}">${category.name}</option>
+		    		</c:forEach>
+		    	</select>
+		    </div>
+		</div>
+
 
 		<input type="hidden" name="content" id="content" value="${post.content}">
 		<input type="hidden" name="regDate" value="${post.regDate}">
@@ -79,6 +96,23 @@
 		
 		var content = $('#content').val();
 		$('#editor').summernote('code', content);
+		
+		$('#add_category').submit(function(event) {
+	        var form = $(this);
+	        $.ajax({
+	            type : form.attr('method'),
+	            url : form.attr('action'),
+	            data : form.serialize()
+	        }).done(function(c) {               
+	            $("#category").append("<option value=" + c.id + ">" + c.name + "</option>");
+	            $("#category").val(c.id);
+	             
+	            alert(c.name + " 카테고리가 추가되었습니다.");
+	        }).fail(function() {
+	            alert('error');
+	        });
+	        event.preventDefault(); 
+	    });
 	</script>
 </body>
 </html>

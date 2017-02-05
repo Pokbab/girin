@@ -1,6 +1,7 @@
 package com.cdg.girin.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -14,8 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.cdg.girin.dao.CategoryDao;
 import com.cdg.girin.dao.PostDao;
+import com.cdg.girin.domain.Category;
 import com.cdg.girin.domain.Post;
 import com.cdg.girin.type.FormType;
 
@@ -24,6 +28,9 @@ import com.cdg.girin.type.FormType;
 public class PostController {
 	@Autowired
 	private PostDao postDao;
+	
+	@Autowired
+    private CategoryDao categoryDao;
 
 	/**
 	 * 글쓰기 화면 호출
@@ -33,7 +40,15 @@ public class PostController {
 	 */
 	@RequestMapping(value = "/write", method = RequestMethod.GET)
 	public String form(Model model, Post post) {
+		
+		List<Category> categoryList = categoryDao.findAll();
+		
+//		Map<Integer, String> categoryMap = categoryList.stream()
+//				.collect(Collectors.toMap(Category::getId, Category::getName));
+		
 		model.addAttribute("formType", FormType.WRITE);
+		model.addAttribute("categoryMap", categoryList);
+		 
 		return "form";
 	}
 	
@@ -50,8 +65,17 @@ public class PostController {
 	}
 
 	@RequestMapping("/list")
-	public String list(Model model, @PageableDefault(sort={"id"}, direction=Direction.DESC, size=2) Pageable pageable) {
-		Page<Post> postPage = postDao.findAll(pageable);
+	public String list(Model model, 
+			@RequestParam(value = "category", required = false, defaultValue = "0") int categoryId,
+			@PageableDefault(sort={"id"}, direction=Direction.DESC, size=2) Pageable pageable) {
+		
+		Page<Post> postPage;
+		if (categoryId > 0) {
+	        postPage = postDao.findByCategoryId(categoryId, pageable);
+	    } else {
+	        postPage = postDao.findAll(pageable);
+	    }
+		
 		model.addAttribute("postPage", postPage);
 		return "list";
 	}

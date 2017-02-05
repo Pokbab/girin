@@ -4,8 +4,12 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -39,4 +43,11 @@ public class Post {
 	
 	@DateTimeFormat(iso = ISO.DATE_TIME)
 	private LocalDateTime modifyDate;
+	
+	@Min(value = 1)
+    private int categoryId;
+ 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoryId", insertable = false, updatable = false)
+    private Category category;
 }
