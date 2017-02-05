@@ -9,6 +9,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Hello Spring Blog</title>
 <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css">
+<style type="text/css">
+	nav.navbar-default {position: relative;}
+</style>
 </head>
 <body>
     <!-- Navigation -->

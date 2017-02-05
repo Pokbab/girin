@@ -7,6 +7,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +50,7 @@ public class PostController {
 	}
 
 	@RequestMapping("/list")
-	public String list(Model model, Pageable pageable) {
+	public String list(Model model, @PageableDefault(sort={"id"}, direction=Direction.DESC, size=2) Pageable pageable) {
 		Page<Post> postPage = postDao.findAll(pageable);
 		model.addAttribute("postPage", postPage);
 		return "list";

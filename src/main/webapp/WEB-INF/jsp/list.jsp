@@ -9,6 +9,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Hello Spring Blog</title>
 <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/dist/css/bootstrap.min.css">
+<style type="text/css">
+	nav.navbar-default {position: relative;}
+</style>
 </head>
 <body>
 	<!-- Navigation -->
@@ -52,7 +55,7 @@
 	    <div class="row">
 	        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 	        
-			<c:forEach var="post" items="${postPage}">
+			<c:forEach var="post" items="${postPage.content}">
 				<div class="post-preview">
 	                <a href="/post/${post.id}">
 	                    <h2 class="post-title">
@@ -66,10 +69,17 @@
 			
 	            <!-- Pager -->
 	            <ul class="pager">
-	                <li class="next">
-	                    <a href="#">Older Posts &rarr;</a>
-	                </li>
-	            </ul>
+				    <c:if test="${!postPage.first}">
+				    <li class="previous">
+				        <a href="?page=${postPage.number-1}">&larr; Newer Posts</a>
+				    </li>
+				    </c:if>
+				    <c:if test="${!postPage.last}">
+				    <li class="next">
+				        <a href="?page=${postPage.number+1}">Older Posts &rarr;</a>
+				    </li>
+				    </c:if>
+				</ul>
 	        </div>
 	    </div>
 	</div>
